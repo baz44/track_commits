@@ -5,12 +5,13 @@ config = YAML.load_file('cosm.yml')
 API_KEY = config["api_key"]
 FEED_ID = config["feed_id"]
 
-
 git_diff = `git diff --stat HEAD HEAD^1`
 
-files_changed = git_diff.match(/\d+ files changed/).to_s.gsub(/files changed*/, "")
-insertions    = git_diff.match(/\d+ insertions/).to_s.gsub(/insertions*/, "")
-deletions     = git_diff.match(/\d+ deletions/).to_s.gsub(/deletions*/, "")
+git_diff.match(/(\d+) files changed, (\d+) insertions\(\+\), (\d+) deletions\(\-\)/)
+
+files_changed = $1
+insertions    = $2
+deletions     = $3
 
 
 {:FilesChanged => files_changed, :Insertions => insertions, :Deletions => deletions}.each_pair do |key,value|
